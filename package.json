@@ -1,6 +1,6 @@
 {
   "name": "milkee-plugin-ext",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Replace \".coffee\" extension with \".js\" in import and require!",
   "main": "dist/main.js",
   "scripts": {

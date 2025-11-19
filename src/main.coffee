@@ -9,8 +9,7 @@ pathRegex = /(['"`])((?:\.{1,2}\/|\/)[^"'`]*?\.coffee)\1/g;
 suffixRegex = /(['"])(\.coffee)\1/g;
 
 isImportContext = (fullText, offset) ->
-  if typeof fullText is not 'string'
-    return false
+  return false unless typeof fullText is 'string'
 
   lastLineBreak = fullText.lastIndexOf '\n', offset
   lineStart = if lastLineBreak is -1 then 0 else lastLineBreak + 1
@@ -47,7 +46,17 @@ replaceExt = (options = {}) ->
   return (compilationResult) ->
     consola.info "#{PREFIX} Running..."
 
-    compiledFiles = compilationResult.compiledFiles
+    { compiledFiles, config } = compilationResult
+
+    # join
+    if config.options?.join
+      outputFile = path.resolve process.cwd(), config.output
+      unless outputFile.endsWith '.js'
+        outputFile += '.js'
+      compiledFiles ?= []
+      unless compiledFiles.includes outputFile
+        compiledFiles.push outputFile
+
     if (not compiledFiles or compiledFiles.length is 0)
       consola.warn "#{PREFIX} No compiled files found to process."
       return
