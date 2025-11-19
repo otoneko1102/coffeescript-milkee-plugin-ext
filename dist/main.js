@@ -17,7 +17,7 @@ suffixRegex = /(['"])(\.coffee)\1/g;
 
 isImportContext = function(fullText, offset) {
   var currentLine, i, lastLineBreak, lineEnd, lineStart, trimmedLine;
-  if (typeof fullText === !'string') {
+  if (typeof fullText !== 'string') {
     return false;
   }
   lastLineBreak = fullText.lastIndexOf('\n', offset);
@@ -53,9 +53,22 @@ isImportContext = function(fullText, offset) {
 
 replaceExt = function(options = {}) {
   return function(compilationResult) {
-    var compiledFiles, content, error, file, fileChanged, j, len, originalContent, processedCount;
+    var compiledFiles, config, content, error, file, fileChanged, j, len, originalContent, outputFile, processedCount, ref;
     consola.info(`${PREFIX} Running...`);
-    compiledFiles = compilationResult.compiledFiles;
+    ({compiledFiles, config} = compilationResult);
+    // join
+    if ((ref = config.options) != null ? ref.join : void 0) {
+      outputFile = path.resolve(process.cwd(), config.output);
+      if (!outputFile.endsWith('.js')) {
+        outputFile += '.js';
+      }
+      if (compiledFiles == null) {
+        compiledFiles = [];
+      }
+      if (!compiledFiles.includes(outputFile)) {
+        compiledFiles.push(outputFile);
+      }
+    }
     if (!compiledFiles || compiledFiles.length === 0) {
       consola.warn(`${PREFIX} No compiled files found to process.`);
       return;
