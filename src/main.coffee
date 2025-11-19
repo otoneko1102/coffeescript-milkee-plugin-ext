@@ -51,16 +51,14 @@ replaceExt = (options = {}) ->
     # join
     if config.options?.join
       outputFile = path.resolve process.cwd(), config.output
-      compiledFiles ?= []
-      if fs.existsSync outputFile
-        unless compiledFiles.includes outputFile
-          compiledFiles.push outputFile
-      else if fs.existsSync "#{outputFile}.js"
+      unless outputFile.endsWith '.js'
         outputFile += '.js'
-        unless compiledFiles.includes outputFile
-          compiledFiles.push outputFile
 
-    if (not compiledFiles or compiledFiles.length is 0)
+      compiledFiles ?= []
+      unless compiledFiles.includes outputFile
+        compiledFiles.push outputFile
+
+    if not compiledFiles or compiledFiles.length is 0
       consola.warn "#{PREFIX} No compiled files found to process."
       return
 
