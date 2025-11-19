@@ -51,11 +51,14 @@ replaceExt = (options = {}) ->
     # join
     if config.options?.join
       outputFile = path.resolve process.cwd(), config.output
-      unless outputFile.endsWith '.js'
-        outputFile += '.js'
       compiledFiles ?= []
-      unless compiledFiles.includes outputFile
-        compiledFiles.push outputFile
+      if fs.existsSync outputFile
+        unless compiledFiles.includes outputFile
+          compiledFiles.push outputFile
+      else if fs.existsSync "#{outputFile}.js"
+        outputFile += '.js'
+        unless compiledFiles.includes outputFile
+          compiledFiles.push outputFile
 
     if (not compiledFiles or compiledFiles.length is 0)
       consola.warn "#{PREFIX} No compiled files found to process."
@@ -64,7 +67,8 @@ replaceExt = (options = {}) ->
     processedCount = 0
 
     for file in compiledFiles
-      unless file.endsWith '.js'
+      isTargetFile = file.endsWith '.js' or (config.options?.join and path.resolve file is path.resolve process.cwd(), config.output)
+      unless isTargetFile
         continue
 
       try
