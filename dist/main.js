@@ -59,18 +59,14 @@ replaceExt = function(options = {}) {
     // join
     if ((ref = config.options) != null ? ref.join : void 0) {
       outputFile = path.resolve(process.cwd(), config.output);
+      if (!outputFile.endsWith('.js')) {
+        outputFile += '.js';
+      }
       if (compiledFiles == null) {
         compiledFiles = [];
       }
-      if (fs.existsSync(outputFile)) {
-        if (!compiledFiles.includes(outputFile)) {
-          compiledFiles.push(outputFile);
-        }
-      } else if (fs.existsSync(`${outputFile}.js`)) {
-        outputFile += '.js';
-        if (!compiledFiles.includes(outputFile)) {
-          compiledFiles.push(outputFile);
-        }
+      if (!compiledFiles.includes(outputFile)) {
+        compiledFiles.push(outputFile);
       }
     }
     if (!compiledFiles || compiledFiles.length === 0) {
