@@ -53,20 +53,24 @@ isImportContext = function(fullText, offset) {
 
 replaceExt = function(options = {}) {
   return function(compilationResult) {
-    var compiledFiles, config, content, error, file, fileChanged, j, len, originalContent, outputFile, processedCount, ref;
+    var compiledFiles, config, content, error, file, fileChanged, isTargetFile, j, len, originalContent, outputFile, processedCount, ref, ref1;
     consola.info(`${PREFIX} Running...`);
     ({compiledFiles, config} = compilationResult);
     // join
     if ((ref = config.options) != null ? ref.join : void 0) {
       outputFile = path.resolve(process.cwd(), config.output);
-      if (!outputFile.endsWith('.js')) {
-        outputFile += '.js';
-      }
       if (compiledFiles == null) {
         compiledFiles = [];
       }
-      if (!compiledFiles.includes(outputFile)) {
-        compiledFiles.push(outputFile);
+      if (fs.existsSync(outputFile)) {
+        if (!compiledFiles.includes(outputFile)) {
+          compiledFiles.push(outputFile);
+        }
+      } else if (fs.existsSync(`${outputFile}.js`)) {
+        outputFile += '.js';
+        if (!compiledFiles.includes(outputFile)) {
+          compiledFiles.push(outputFile);
+        }
       }
     }
     if (!compiledFiles || compiledFiles.length === 0) {
@@ -76,7 +80,8 @@ replaceExt = function(options = {}) {
     processedCount = 0;
     for (j = 0, len = compiledFiles.length; j < len; j++) {
       file = compiledFiles[j];
-      if (!file.endsWith('.js')) {
+      isTargetFile = file.endsWith('.js' || (((ref1 = config.options) != null ? ref1.join : void 0) && path.resolve(file === path.resolve(process.cwd(), config.output))));
+      if (!isTargetFile) {
         continue;
       }
       try {
