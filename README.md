@@ -10,7 +10,7 @@ Replace ".coffee" extension with ".js" in import and require!
 
 #### coffee.config.cjs
 
-```
+```js
 const replaceExt = require('milkee-plugin-ext');
 
 module.exports = {

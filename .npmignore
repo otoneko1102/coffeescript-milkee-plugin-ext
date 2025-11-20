@@ -1,3 +1,4 @@
+.github/
 src/
 .gitattributes
 coffee.config.cjs
