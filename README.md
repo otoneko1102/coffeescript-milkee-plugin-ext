@@ -14,7 +14,7 @@ Replace ".coffee" extension with ".js" in import and require!
 const replaceExt = require('milkee-plugin-ext');
 
 module.exports = {
-// ...
+  // ...
   milkee: {
     plugins: [
       replaceExt(),
