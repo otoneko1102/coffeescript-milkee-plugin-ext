@@ -5,8 +5,8 @@ consola = require 'consola'
 pkg = require '../package.json'
 PREFIX = "[#{pkg.name}]"
 
-pathRegex = /(['"`])((?:\.{1,2}\/|\/)[^"'`]*?\.coffee)\1/g;
-suffixRegex = /(['"])(\.coffee)\1/g;
+pathRegex = /(['"`])((?:\.{1,2}\/|\/)[^"'`]*?\.(?:lit)?coffee)\1/g;
+suffixRegex = /(['"])(\.(?:lit)?coffee)\1/g;
 
 isImportContext = (fullText, offset) ->
   return false unless typeof fullText is 'string'
@@ -76,7 +76,7 @@ replaceExt = (options = {}) ->
 
         content = content.replace pathRegex, (match, quote, matchedPath, offset, fullText) ->
           if isImportContext fullText, offset
-            newPath = matchedPath.replace /\.coffee$/, '.js'
+            newPath = matchedPath.replace /\.(lit)?coffee$/, '.js'
             if matchedPath isnt newPath
               fileChanged = true
               consola.trace "#{PREFIX} Replacing (path) in #{path.basename file}: #{matchedPath} -> #{newPath}"
@@ -85,7 +85,7 @@ replaceExt = (options = {}) ->
 
         content = content.replace suffixRegex, (match, quote, matchedPath, offset, fullText) ->
           if isImportContext fullText, offset
-            newPath = matchedPath.replace /\.coffee$/, '.js'
+            newPath = matchedPath.replace /\.(lit)?coffee$/, '.js'
             if matchedPath isnt newPath
               fileChanged = true
               consola.trace "#{PREFIX} Replacing (suffix) in #{path.basename file}: #{matchedPath} -> #{newPath}"

@@ -2,7 +2,7 @@
 
 This is a plugin for [milkee](https://www.npmjs.com/package/milkee) .
 
-Replace ".coffee" extension with ".js" in import and require!
+Replace ".coffee" / ".litcoffee" extension with ".js" in import and require!
 
 ## Usage
 
