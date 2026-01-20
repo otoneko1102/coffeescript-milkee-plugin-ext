@@ -11,9 +11,9 @@ pkg = require('../package.json');
 
 PREFIX = `[${pkg.name}]`;
 
-pathRegex = /(['"`])((?:\.{1,2}\/|\/)[^"'`]*?\.coffee)\1/g;
+pathRegex = /(['"`])((?:\.{1,2}\/|\/)[^"'`]*?\.(?:lit)?coffee)\1/g;
 
-suffixRegex = /(['"])(\.coffee)\1/g;
+suffixRegex = /(['"])(\.(?:lit)?coffee)\1/g;
 
 isImportContext = function(fullText, offset) {
   var currentLine, i, lastLineBreak, lineEnd, lineStart, trimmedLine;
@@ -87,7 +87,7 @@ replaceExt = function(options = {}) {
         content = content.replace(pathRegex, function(match, quote, matchedPath, offset, fullText) {
           var newPath;
           if (isImportContext(fullText, offset)) {
-            newPath = matchedPath.replace(/\.coffee$/, '.js');
+            newPath = matchedPath.replace(/\.(lit)?coffee$/, '.js');
             if (matchedPath !== newPath) {
               fileChanged = true;
               consola.trace(`${PREFIX} Replacing (path) in ${path.basename(file)}: ${matchedPath} -> ${newPath}`);
@@ -99,7 +99,7 @@ replaceExt = function(options = {}) {
         content = content.replace(suffixRegex, function(match, quote, matchedPath, offset, fullText) {
           var newPath;
           if (isImportContext(fullText, offset)) {
-            newPath = matchedPath.replace(/\.coffee$/, '.js');
+            newPath = matchedPath.replace(/\.(lit)?coffee$/, '.js');
             if (matchedPath !== newPath) {
               fileChanged = true;
               consola.trace(`${PREFIX} Replacing (suffix) in ${path.basename(file)}: ${matchedPath} -> ${newPath}`);
